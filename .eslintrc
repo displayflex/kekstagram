@@ -1,0 +1,11 @@
+{
+	"env": {
+		"browser": true
+	},
+	"root" : true,
+	"extends": "htmlacademy/es5",
+	"rules": {
+		"indent": ["error", "tab"],
+		"no-tabs": ["off"]
+	}
+}

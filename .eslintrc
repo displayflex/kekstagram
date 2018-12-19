@@ -5,7 +5,7 @@
 	"root" : true,
 	"extends": "htmlacademy/es5",
 	"rules": {
-		"indent": ["error", "tab"],
+		"indent": ["error", "tab", {"SwitchCase": 1}],
 		"no-tabs": ["off"]
 	}
 }

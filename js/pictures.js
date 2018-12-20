@@ -7,6 +7,8 @@ var MAX_AVATARS = 6;
 var PICTURE_COUNT = 25;
 var ESC_KEYCODE = 27;
 var PIN_INITIAL_VALUE = 100;
+var MAX_HASH_TAG_LENGTH = 20;
+var MAX_HASH_TAGS_AMOUNT = 5;
 var PICTURE_COMMENTS = [
 	'Всё отлично!',
 	'В целом всё неплохо. Но не всё.',
@@ -48,6 +50,7 @@ var effectLevelInput = uploadFilePopup.querySelector('.effect-level__value');
 var effectsList = uploadFilePopup.querySelector('.effects__list');
 var previewImage = uploadFilePopup.querySelector('.img-upload__preview img');
 var previewImageWrapper = uploadFilePopup.querySelector('.img-upload__preview');
+var hashTagsInput = uploadFilePopup.querySelector('.text__hashtags');
 
 var getRandomNumber = function (min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
@@ -270,3 +273,61 @@ var effectsListClickHandler = function (evt) {
 };
 
 effectsList.addEventListener('click', effectsListClickHandler);
+
+var isArrayWithoutDuplicates = function (array) {
+	var arrayToLowerCase = array.map(function (element) {
+		return element.toLowerCase();
+	});
+
+	arrayToLowerCase.sort();
+
+	var arrayWithoutDuplicates = [];
+	var _temp;
+
+	for (var i = 0; i < arrayToLowerCase.length; i += 1) {
+		if (arrayToLowerCase[i] !== _temp) {
+			arrayWithoutDuplicates.push(arrayToLowerCase[i]);
+			_temp = arrayToLowerCase[i];
+		} else {
+			return false;
+		}
+	}
+
+	return true;
+};
+
+var validateHashTagsInput = function () {
+	if (hashTagsInput.value === '') {
+		return;
+	}
+
+	var hashTags = hashTagsInput.value.split(' ');
+
+	if (hashTags.length > MAX_HASH_TAGS_AMOUNT) {
+		hashTagsInput.setCustomValidity('Количество хеш-тегов не должно быть больше пяти');
+	} else if (!isArrayWithoutDuplicates(hashTags)) {
+		hashTagsInput.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+	} else {
+		for (var i = 0; i < hashTags.length; i += 1) {
+			if (hashTags[i][0] !== '#') {
+				hashTagsInput.setCustomValidity('Каждый хеш-тег должен начинаться с символа #');
+				break;
+			} else if (hashTags[i] === '#') {
+				hashTagsInput.setCustomValidity('Хеш-тег не может состоять только из одной #');
+				break;
+			} else if (hashTags[i].length > MAX_HASH_TAG_LENGTH) {
+				hashTagsInput.setCustomValidity('Максимальная длина одного хэш-тега 20 символов, включая #');
+				break;
+			} else if (hashTags[i].indexOf('#', 1) !== -1) {
+				hashTagsInput.setCustomValidity('Хэш-теги должны быть разделены пробелами');
+				break;
+			} else {
+				hashTagsInput.setCustomValidity('');
+			}
+		}
+	}
+};
+
+hashTagsInput.addEventListener('blur', function () {
+	validateHashTagsInput();
+});

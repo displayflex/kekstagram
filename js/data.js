@@ -34,20 +34,22 @@
 		return randomComments;
 	};
 
-	window.data = {
-		generatePictures: function (count) {
-			var pictures = [];
+	var generatePictures = function (count) {
+		var pictures = [];
 
-			for (var i = 1; i <= count; i += 1) {
-				pictures.push({
-					url: 'photos/' + i + '.jpg',
-					likes: window.util.getRandomNumber(MIN_LIKES, MAX_LIKES),
-					comments: generateRandomComments(PICTURE_COMMENTS),
-					description: getRandomElementFromArray(PICTURE_DESCRIPTIONS)
-				});
-			}
-
-			return pictures;
+		for (var i = 1; i <= count; i += 1) {
+			pictures.push({
+				url: 'photos/' + i + '.jpg',
+				likes: window.util.getRandomNumber(MIN_LIKES, MAX_LIKES),
+				comments: generateRandomComments(PICTURE_COMMENTS),
+				description: getRandomElementFromArray(PICTURE_DESCRIPTIONS)
+			});
 		}
+
+		return pictures;
+	};
+
+	window.data = {
+		generatePictures: generatePictures
 	};
 })();

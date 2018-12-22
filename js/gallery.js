@@ -21,7 +21,7 @@
 
 	allPictures.forEach(function (picture, index) {
 		picture.addEventListener('click', function () {
-			window.preview.openBigPicturePopup(pictures[index]);
+			window.preview.open(pictures[index]);
 		});
 	});
 })();

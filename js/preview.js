@@ -47,12 +47,10 @@
 		}
 	};
 
-	window.preview = {
-		openBigPicturePopup: function (picture) {
-			renderBigPicture(picture);
-			bigPicture.classList.remove('hidden');
-			document.addEventListener('keydown', bigPicturePopupEscPressHandler);
-		}
+	var openBigPicturePopup = function (picture) {
+		renderBigPicture(picture);
+		bigPicture.classList.remove('hidden');
+		document.addEventListener('keydown', bigPicturePopupEscPressHandler);
 	};
 
 	var closeBigPicturePopup = function () {
@@ -66,4 +64,8 @@
 
 	bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 	bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
+
+	window.preview = {
+		open: openBigPicturePopup
+	};
 })();

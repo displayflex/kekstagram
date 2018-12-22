@@ -5,17 +5,20 @@
 	var MAX_HASH_TAG_LENGTH = 20;
 	var MAX_HASH_TAGS_AMOUNT = 5;
 
-	var uploadFileInput = document.querySelector('#upload-file');
-	var uploadFilePopup = document.querySelector('.img-upload__overlay');
+	var uploadForm = document.querySelector('.img-upload__form');
+	var uploadFileInput = uploadForm.querySelector('#upload-file');
+	var uploadFilePopup = uploadForm.querySelector('.img-upload__overlay');
 	var imageUploadClose = uploadFilePopup.querySelector('.img-upload__cancel');
 	var effectLevelSlider = uploadFilePopup.querySelector('.effect-level');
 	var effectLevelPin = uploadFilePopup.querySelector('.effect-level__pin');
 	var effectLevelDepth = uploadFilePopup.querySelector('.effect-level__depth');
 	var effectLevelInput = uploadFilePopup.querySelector('.effect-level__value');
 	var effectsList = uploadFilePopup.querySelector('.effects__list');
+	var effectNone = effectsList.querySelector('#effect-none');
 	var previewImage = uploadFilePopup.querySelector('.img-upload__preview img');
 	var previewImageWrapper = uploadFilePopup.querySelector('.img-upload__preview');
 	var hashTagsInput = uploadFilePopup.querySelector('.text__hashtags');
+	var commentInput = uploadFilePopup.querySelector('.text__description');
 
 	var uploadFilePopupEscPressHandler = function (evt) {
 		if (evt.target.className !== 'text__hashtags' && evt.target.className !== 'text__description') {
@@ -29,9 +32,19 @@
 		document.addEventListener('keydown', uploadFilePopupEscPressHandler);
 	};
 
+	var resetInputData = function () {
+		uploadFileInput.value = '';
+		hashTagsInput.value = '';
+		commentInput.value = '';
+		previewImage.className = 'effects__preview--none';
+		previewImageWrapper.style.filter = '';
+		effectLevelInput.value = 100;
+		effectNone.checked = true;
+	};
+
 	var closeUploadFilePopup = function () {
 		uploadFilePopup.classList.add('hidden');
-		uploadFileInput.value = '';
+		resetInputData();
 		document.removeEventListener('keydown', uploadFilePopupEscPressHandler);
 	};
 
@@ -51,6 +64,30 @@
 		effectLevelPin.style.left = pinPosition + '%';
 		effectLevelDepth.style.width = pinPosition + '%';
 		effectLevelInput.value = Math.round(pinPosition);
+	};
+
+	var setEffectLevel = function () {
+		switch (previewImage.className) {
+			case 'effects__preview--chrome':
+				previewImageWrapper.style.filter = 'grayscale(' + effectLevelInput.value / 100 + ')';
+				break;
+			case 'effects__preview--sepia':
+				previewImageWrapper.style.filter = 'sepia(' + effectLevelInput.value / 100 + ')';
+				break;
+			case 'effects__preview--marvin':
+				previewImageWrapper.style.filter = 'invert(' + effectLevelInput.value + '%)';
+				break;
+			case 'effects__preview--phobos':
+				previewImageWrapper.style.filter = 'blur(' + effectLevelInput.value / 100 * 3 + 'px)';
+				break;
+			case 'effects__preview--heat':
+				previewImageWrapper.style.filter = 'brightness(' + ((effectLevelInput.value / 100 * 2) + 1) + ')';
+				break;
+
+			default:
+				previewImageWrapper.style.filter = '';
+				break;
+		}
 	};
 
 	var effectLevelPinMouseDownHandler = function (evt) {
@@ -79,35 +116,10 @@
 		document.addEventListener('mouseup', mouseUpHandler);
 	};
 
-	var setEffectLevel = function () {
-		switch (previewImage.className) {
-			case 'effects__preview--chrome':
-				previewImageWrapper.style.filter = 'grayscale(' + effectLevelInput.value / 100 + ')';
-				break;
-			case 'effects__preview--sepia':
-				previewImageWrapper.style.filter = 'sepia(' + effectLevelInput.value / 100 + ')';
-				break;
-			case 'effects__preview--marvin':
-				previewImageWrapper.style.filter = 'invert(' + effectLevelInput.value + '%)';
-				break;
-			case 'effects__preview--phobos':
-				previewImageWrapper.style.filter = 'blur(' + effectLevelInput.value / 100 * 3 + 'px)';
-				break;
-			case 'effects__preview--heat':
-				previewImageWrapper.style.filter = 'brightness(' + ((effectLevelInput.value / 100 * 2) + 1) + ')';
-				break;
-
-			default:
-				previewImageWrapper.style.filter = '';
-				break;
-		}
-	};
-
-	effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
-
 	var effectsListClickHandler = function (evt) {
 		if (evt.target.nodeName === 'INPUT') {
 			previewImage.className = 'effects__preview--' + evt.target.value;
+			setEffectLevel();
 			setPinPosition(PIN_INITIAL_VALUE);
 		}
 
@@ -117,8 +129,6 @@
 			effectLevelSlider.classList.remove('hidden');
 		}
 	};
-
-	effectsList.addEventListener('click', effectsListClickHandler);
 
 	var isArrayWithoutDuplicates = function (array) {
 		var arrayToLowerCase = array.map(function (element) {
@@ -174,7 +184,24 @@
 		}
 	};
 
+	var saveSuccessHandler = function () {
+		closeUploadFilePopup();
+	};
+
+	var saveErrorHandler = function (errorMessage) {
+		window.util.renderErrorMessage(errorMessage);
+	};
+
+	var uploadFormSubmitHandler = function (evt) {
+		window.backend.save(new FormData(uploadForm), saveSuccessHandler, saveErrorHandler);
+		evt.preventDefault();
+	};
+
 	hashTagsInput.addEventListener('blur', function () {
 		validateHashTagsInput();
 	});
+
+	effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
+	effectsList.addEventListener('click', effectsListClickHandler);
+	uploadForm.addEventListener('submit', uploadFormSubmitHandler);
 })();

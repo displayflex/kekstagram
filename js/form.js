@@ -4,6 +4,14 @@
 	var PIN_INITIAL_VALUE = 100;
 	var MAX_HASH_TAG_LENGTH = 20;
 	var MAX_HASH_TAGS_AMOUNT = 5;
+	var HashTagErrorMessage = {
+		TOO_BIG_QUANTITY: 'Количество хеш-тегов не должно быть больше пяти',
+		HAVE_DUPLICATES: 'Один и тот же хэш-тег не может быть использован дважды',
+		NOT_BEGINS_WITH_HASH: 'Каждый хеш-тег должен начинаться с символа #',
+		NO_CONTENT_AFTER_HASH: 'Хеш-тег не может состоять только из одной #',
+		TOO_LONG: 'Максимальная длина одного хэш-тега 20 символов, включая #',
+		NOT_SEPARATED_WITH_SPACE: 'Хэш-теги должны быть разделены пробелами'
+	};
 
 	var uploadForm = document.querySelector('.img-upload__form');
 	var uploadFileInput = uploadForm.querySelector('#upload-file');
@@ -160,22 +168,22 @@
 		var hashTags = hashTagsInput.value.split(' ');
 
 		if (hashTags.length > MAX_HASH_TAGS_AMOUNT) {
-			hashTagsInput.setCustomValidity('Количество хеш-тегов не должно быть больше пяти');
+			hashTagsInput.setCustomValidity(HashTagErrorMessage.TOO_BIG_QUANTITY);
 		} else if (!isArrayWithoutDuplicates(hashTags)) {
-			hashTagsInput.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+			hashTagsInput.setCustomValidity(HashTagErrorMessage.HAVE_DUPLICATES);
 		} else {
 			for (var i = 0; i < hashTags.length; i += 1) {
 				if (hashTags[i][0] !== '#') {
-					hashTagsInput.setCustomValidity('Каждый хеш-тег должен начинаться с символа #');
+					hashTagsInput.setCustomValidity(HashTagErrorMessage.NOT_BEGINS_WITH_HASH);
 					break;
 				} else if (hashTags[i] === '#') {
-					hashTagsInput.setCustomValidity('Хеш-тег не может состоять только из одной #');
+					hashTagsInput.setCustomValidity(HashTagErrorMessage.NO_CONTENT_AFTER_HASH);
 					break;
 				} else if (hashTags[i].length > MAX_HASH_TAG_LENGTH) {
-					hashTagsInput.setCustomValidity('Максимальная длина одного хэш-тега 20 символов, включая #');
+					hashTagsInput.setCustomValidity(HashTagErrorMessage.TOO_LONG);
 					break;
 				} else if (hashTags[i].indexOf('#', 1) !== -1) {
-					hashTagsInput.setCustomValidity('Хэш-теги должны быть разделены пробелами');
+					hashTagsInput.setCustomValidity(HashTagErrorMessage.NOT_SEPARATED_WITH_SPACE);
 					break;
 				} else {
 					hashTagsInput.setCustomValidity('');

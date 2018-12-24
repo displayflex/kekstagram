@@ -1,16 +1,24 @@
 'use strict';
 
 (function () {
-	var LOAD_URL = 'https://js.dump.academy/kekstagram/data';
-	var SAVE_URL = 'https://js.dump.academy/kekstagram';
 	var RESPONSE_TIMEOUT = 3000;
+	var Url = {
+		LOAD: 'https://js.dump.academy/kekstagram/data',
+		SAVE: 'https://js.dump.academy/kekstagram'
+	};
+	var Message = {
+		WRONG_REQUEST: 'Неверный запрос',
+		NOT_AUTHORIZED: 'Пользователь не авторизован',
+		NOT_FOUND: 'Ничего не найдено',
+		CONNECT_ERROR: 'Произошла ошибка соединения'
+	};
 
 	var load = function (onLoad, onError) {
 		var xhr = new XMLHttpRequest();
 		xhr.responseType = 'json';
 		xhr.timeout = RESPONSE_TIMEOUT;
 
-		xhr.open('GET', LOAD_URL);
+		xhr.open('GET', Url.LOAD);
 
 		xhr.addEventListener('load', function () {
 			var error;
@@ -20,13 +28,13 @@
 					onLoad(xhr.response);
 					break;
 				case 400:
-					error = 'Неверный запрос';
+					error = Message.WRONG_REQUEST;
 					break;
 				case 401:
-					error = 'Пользователь не авторизован';
+					error = Message.NOT_AUTHORIZED;
 					break;
 				case 404:
-					error = 'Ничего не найдено';
+					error = Message.NOT_FOUND;
 					break;
 				default:
 					error = 'Статус ответа: ' + xhr.status + ' ' + xhr.statusText;
@@ -39,7 +47,7 @@
 		});
 
 		xhr.addEventListener('error', function () {
-			onError('Произошла ошибка соединения');
+			onError(Message.CONNECT_ERROR);
 		});
 
 		xhr.addEventListener('timeout', function () {
@@ -54,7 +62,7 @@
 		xhr.responseType = 'json';
 		xhr.timeout = RESPONSE_TIMEOUT;
 
-		xhr.open('POST', SAVE_URL);
+		xhr.open('POST', Url.SAVE);
 
 		xhr.addEventListener('load', function () {
 			if (xhr.status === 200) {
@@ -65,7 +73,7 @@
 		});
 
 		xhr.addEventListener('error', function () {
-			onError('Произошла ошибка соединения');
+			onError(Message.CONNECT_ERROR);
 		});
 
 		xhr.addEventListener('timeout', function () {

@@ -8,6 +8,24 @@
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	};
 
+	var getSomeRandomElemets = function (array, amountOfElements) {
+		var arrayCopy = array.slice();
+		var newArray = [];
+		var arrayLength = arrayCopy.length;
+		var _arrayIndex;
+
+		for (var i = 0; i < arrayLength; i += 1) {
+			if (newArray.length < amountOfElements) {
+				_arrayIndex = (Math.floor(Math.random() * arrayCopy.length));
+				newArray.push(arrayCopy.splice(_arrayIndex, 1)[0]);
+			} else {
+				break;
+			}
+		}
+
+		return newArray;
+	};
+
 	var renderErrorMessage = function (errorMessage) {
 		var node = document.createElement('div');
 		node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: #ff4d4d;';
@@ -36,6 +54,7 @@
 	window.util = {
 		getRandomNumber: getRandomNumber,
 		isEscEvent: isEscEvent,
-		renderErrorMessage: renderErrorMessage
+		renderErrorMessage: renderErrorMessage,
+		getSomeRandomElemets: getSomeRandomElemets
 	};
 })();

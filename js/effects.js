@@ -87,14 +87,19 @@
 		}
 	};
 
-	effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
-	effectsList.addEventListener('click', effectsListClickHandler);
-
 	window.effects = {
 		resetData: function () {
 			previewImage.className = 'effects__preview--none';
 			previewImage.style.filter = '';
 			effectLevelInput.value = 100;
+		},
+		activate: function () {
+			effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
+			effectsList.addEventListener('click', effectsListClickHandler);
+		},
+		deactivate: function () {
+			effectLevelPin.removeEventListener('mousedown', effectLevelPinMouseDownHandler);
+			effectsList.removeEventListener('click', effectsListClickHandler);
 		}
 	};
 })();

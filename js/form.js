@@ -30,6 +30,7 @@
 	var openUploadFilePopup = function () {
 		effectLevelSlider.classList.add('hidden');
 		window.scalePhoto.activate();
+		window.effects.activate();
 		uploadFilePopup.classList.remove('hidden');
 		document.addEventListener('keydown', uploadFilePopupEscPressHandler);
 	};
@@ -46,16 +47,9 @@
 		uploadFilePopup.classList.add('hidden');
 		resetInputData();
 		window.scalePhoto.deactivate();
+		window.effects.deactivate();
 		document.removeEventListener('keydown', uploadFilePopupEscPressHandler);
 	};
-
-	uploadFileInput.addEventListener('change', function () {
-		openUploadFilePopup();
-	});
-
-	imageUploadClose.addEventListener('click', function () {
-		closeUploadFilePopup();
-	});
 
 	var isArrayWithoutDuplicates = function (array) {
 		var arrayToLowerCase = array.map(function (element) {
@@ -124,9 +118,17 @@
 		evt.preventDefault();
 	};
 
+	imageUploadClose.addEventListener('click', function () {
+		closeUploadFilePopup();
+	});
+
 	hashTagsInput.addEventListener('blur', function () {
 		validateHashTagsInput();
 	});
 
 	uploadForm.addEventListener('submit', uploadFormSubmitHandler);
+
+	window.form = {
+		openPopup: openUploadFilePopup
+	};
 })();

@@ -27,12 +27,20 @@
 		}
 	};
 
+	var uploadFilePopupClickHandler = function (evt) {
+		if (evt.target.className === 'img-upload__overlay') {
+			closeUploadFilePopup();
+		}
+	};
+
 	var openUploadFilePopup = function () {
 		effectLevelSlider.classList.add('hidden');
+		document.body.classList.add('js-no-scroll');
 		window.scalePhoto.activate();
 		window.effects.activate();
 		uploadFilePopup.classList.remove('hidden');
 		document.addEventListener('keydown', uploadFilePopupEscPressHandler);
+		uploadFilePopup.addEventListener('click', uploadFilePopupClickHandler);
 	};
 
 	var resetInputData = function () {
@@ -45,10 +53,12 @@
 
 	var closeUploadFilePopup = function () {
 		uploadFilePopup.classList.add('hidden');
+		document.body.classList.remove('js-no-scroll');
 		resetInputData();
 		window.scalePhoto.deactivate();
 		window.effects.deactivate();
 		document.removeEventListener('keydown', uploadFilePopupEscPressHandler);
+		uploadFilePopup.removeEventListener('click', uploadFilePopupClickHandler);
 	};
 
 	var isArrayWithoutDuplicates = function (array) {

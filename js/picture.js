@@ -20,16 +20,26 @@
 		}
 	};
 
+	var bigPictureClickHandler = function (evt) {
+		if (evt.target.className === 'big-picture overlay') {
+			closeBigPicturePopup();
+		}
+	};
+
 	var openBigPicturePopup = function (picture) {
 		renderBigPicture(picture);
 		bigPicture.classList.remove('hidden');
+		document.body.classList.add('js-no-scroll');
 		document.addEventListener('keydown', bigPicturePopupEscPressHandler);
+		bigPicture.addEventListener('click', bigPictureClickHandler);
 	};
 
 	var closeBigPicturePopup = function () {
 		bigPicture.classList.add('hidden');
-		document.removeEventListener('keydown', bigPicturePopupEscPressHandler);
+		document.body.classList.remove('js-no-scroll');
 		window.comments.clear();
+		document.removeEventListener('keydown', bigPicturePopupEscPressHandler);
+		bigPicture.removeEventListener('click', bigPictureClickHandler);
 	};
 
 	bigPictureClose.addEventListener('click', function () {

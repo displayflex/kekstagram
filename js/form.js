@@ -75,6 +75,8 @@
 
 	var validateHashTagsInput = function () {
 		if (hashTagsInput.value === '') {
+			hashTagsInput.style.border = 'none';
+			hashTagsInput.setCustomValidity('');
 			return;
 		}
 
@@ -102,6 +104,12 @@
 					hashTagsInput.setCustomValidity('');
 				}
 			}
+		}
+
+		if (!hashTagsInput.validity.valid) {
+			hashTagsInput.style.border = '3px solid red';
+		} else {
+			hashTagsInput.style.border = 'none';
 		}
 	};
 

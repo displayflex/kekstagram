@@ -2,6 +2,7 @@
 
 (function () {
 	var PIN_INITIAL_VALUE = 100;
+	var EFFECT_LEVEL_INPUT_INITIAL_VALUE = 100;
 	var MAX_HASH_TAG_LENGTH = 20;
 	var MAX_HASH_TAGS_AMOUNT = 5;
 	var HashTagErrorMessage = {
@@ -36,6 +37,7 @@
 
 	var openUploadFilePopup = function () {
 		effectLevelSlider.classList.add('hidden');
+		window.scalePhoto.activate();
 		uploadFilePopup.classList.remove('hidden');
 		document.addEventListener('keydown', uploadFilePopupEscPressHandler);
 	};
@@ -53,6 +55,7 @@
 	var closeUploadFilePopup = function () {
 		uploadFilePopup.classList.add('hidden');
 		resetInputData();
+		window.scalePhoto.deactivate();
 		document.removeEventListener('keydown', uploadFilePopupEscPressHandler);
 	};
 
@@ -77,23 +80,23 @@
 	var setEffectLevel = function () {
 		switch (previewImage.className) {
 			case 'effects__preview--chrome':
-				previewImageWrapper.style.filter = 'grayscale(' + effectLevelInput.value / 100 + ')';
+				previewImage.style.filter = 'grayscale(' + effectLevelInput.value / 100 + ')';
 				break;
 			case 'effects__preview--sepia':
-				previewImageWrapper.style.filter = 'sepia(' + effectLevelInput.value / 100 + ')';
+				previewImage.style.filter = 'sepia(' + effectLevelInput.value / 100 + ')';
 				break;
 			case 'effects__preview--marvin':
-				previewImageWrapper.style.filter = 'invert(' + effectLevelInput.value + '%)';
+				previewImage.style.filter = 'invert(' + effectLevelInput.value + '%)';
 				break;
 			case 'effects__preview--phobos':
-				previewImageWrapper.style.filter = 'blur(' + effectLevelInput.value / 100 * 3 + 'px)';
+				previewImage.style.filter = 'blur(' + effectLevelInput.value / 100 * 3 + 'px)';
 				break;
 			case 'effects__preview--heat':
-				previewImageWrapper.style.filter = 'brightness(' + ((effectLevelInput.value / 100 * 2) + 1) + ')';
+				previewImage.style.filter = 'brightness(' + ((effectLevelInput.value / 100 * 2) + 1) + ')';
 				break;
 
 			default:
-				previewImageWrapper.style.filter = '';
+				previewImage.style.filter = '';
 				break;
 		}
 	};
@@ -127,6 +130,7 @@
 	var effectsListClickHandler = function (evt) {
 		if (evt.target.nodeName === 'INPUT') {
 			previewImage.className = 'effects__preview--' + evt.target.value;
+			effectLevelInput.value = EFFECT_LEVEL_INPUT_INITIAL_VALUE;
 			setEffectLevel();
 			setPinPosition(PIN_INITIAL_VALUE);
 		}
